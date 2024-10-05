@@ -1,0 +1,12 @@
+<html>
+<head>
+    <title>Book list</title>
+</head>
+<body>
+    <div class="book-list">
+        {{range .Books}}
+            {{template "item.go.tmpl" .}}
+        {{end}}
+    </div>
+</body>
+</html>
