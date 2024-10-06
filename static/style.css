@@ -88,3 +88,14 @@ a {
 .book-card .arrows .arrow-right {
     padding-right: 0.1em;
 }
+
+a.goto-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    opacity: 0.3;
+    padding: 0.5em;
+    z-index: 2;
+}
