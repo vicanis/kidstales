@@ -46,23 +46,32 @@ a {
 }
 
 .book-card {
-    width: 100%;
     text-align: center;
+    height: 100vh;
+}
+
+.book-card .book-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 }
 
 .book-card img {
-    height: 100vh;
+    max-height: 100vh;
+    max-width: 100%;
 }
 
 .book-card .arrows {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 1
 }
 
 .book-card .arrows .arrow-left,
@@ -71,4 +80,11 @@ a {
     padding: 1em 0.5em;
     opacity: 0.3;
     cursor: pointer;
+}
+
+.book-card .arrows .arrow-left {
+    padding-left: 0.1em;
+}
+.book-card .arrows .arrow-right {
+    padding-right: 0.1em;
 }
