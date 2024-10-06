@@ -64,7 +64,18 @@ func (n *Node) FirstChild() *Node {
 	return nil
 }
 
+func (n *Node) NextSibling() *Node {
+	if n.node.NextSibling != nil {
+		return NewNode(n.node.NextSibling)
+	}
+	return nil
+}
+
 func (n *Node) PrintTree() {
+	if n.node == nil {
+		panic("could not print tree of nil node")
+	}
+
 	printTree(n.node, "")
 }
 

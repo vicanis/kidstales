@@ -86,7 +86,11 @@ func NewServer(ctx context.Context) *Server {
 					data["PreviousPageURL"] = fmt.Sprintf("%s?page=%d", r.URL.Path, pageIndex-1)
 				}
 
-				data["NextPageURL"] = fmt.Sprintf("%s?page=%d", r.URL.Path, pageIndex+1)
+				pageCount := data["PageCount"].(int)
+
+				if pageCount > 0 && pageIndex < pageCount-1 {
+					data["NextPageURL"] = fmt.Sprintf("%s?page=%d", r.URL.Path, pageIndex+1)
+				}
 
 				data["CurrentPageNumber"] = pageIndex + 1
 

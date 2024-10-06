@@ -17,5 +17,6 @@ func TestBookPage(t *testing.T) {
 
 	require.Equal(t, map[string]any{
 		"ImageBase": "/proxy/knigi/rusalochka/files/mobile",
+		"PageCount": 52,
 	}, parsed)
 }
