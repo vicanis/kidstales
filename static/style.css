@@ -9,17 +9,18 @@ a {
 
 .book-list {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .book-list .book {
-    display: flex;
-    width: 250px;
-    flex-direction: column;
-    border: 1px solid #ddd;
+    display: grid;
+    grid-template-areas: "img name" "img author";
+    justify-content: start;
+    align-items: center;
+    gap: 0 1em;
     margin: 0.5em;
     padding: 0.5em;
-    height: 250px;
+    border: 1px solid #ddd;
 }
 
 .book-list .book a {
@@ -28,14 +29,20 @@ a {
 }
 
 .book-list .book-image {
-    width: 200px;
+    grid-area: img;
+    width: 100px;
     margin: auto;
 }
 
 .book-list .book-name {
+    grid-area: name;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.book-list .book-author {
+    grid-area: author;
 }
 
 .book-card {
