@@ -1,16 +1,21 @@
-FROM golang:latest AS build
+FROM golang:latest AS builder
 
-COPY go.* /app/
+WORKDIR /app
 
-COPY . /app/
+COPY go.* ./
+RUN go mod download
+
+COPY cmd cmd/
+COPY internal internal/
+
 WORKDIR /app/cmd
 RUN go build -o /app/app app.go
 
-FROM alpine:latest
+FROM alpine:latest AS runner
 
 RUN apk update && apk add ca-certificates libc6-compat
 
 COPY templates /templates
-COPY --from=build /app/app /app
+COPY --from=builder /app/app /app
 
 CMD /app
