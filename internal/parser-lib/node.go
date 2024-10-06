@@ -64,6 +64,10 @@ func (n *Node) FirstChild() *Node {
 	return nil
 }
 
+func (n *Node) PrintTree() {
+	printTree(n.node, "")
+}
+
 type NodeList struct {
 	nodes []*Node
 }

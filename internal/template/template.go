@@ -1,4 +1,4 @@
-package server
+package template
 
 import (
 	"html/template"
@@ -26,7 +26,7 @@ func init() {
 	}
 }
 
-func mustGetTemplate(name string) *template.Template {
+func MustGetTemplate(name string) *template.Template {
 	if tpl == nil {
 		panic("template was not parsed")
 	}
@@ -40,8 +40,8 @@ func mustGetTemplate(name string) *template.Template {
 	return templateFound
 }
 
-func mustRenderTemplate(templateName string, w io.Writer, data any, isHtml bool) {
-	tpl := mustGetTemplate(templateName)
+func MustRenderTemplate(templateName string, w io.Writer, data any, isHtml bool) {
+	tpl := MustGetTemplate(templateName)
 
 	var err error
 	if isHtml {

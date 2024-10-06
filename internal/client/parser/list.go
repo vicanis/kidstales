@@ -3,9 +3,11 @@ package parser
 import (
 	"fmt"
 	"io"
+	"kidstales/internal/config"
 	"kidstales/internal/model"
 	parserlib "kidstales/internal/parser-lib"
 	"regexp"
+	"strings"
 )
 
 type BooksListPageParser struct{}
@@ -38,7 +40,7 @@ func (p *BooksListPageParser) Parse(r io.ReadCloser) (map[string]any, error) {
 		book := &model.Book{}
 
 		if pageURL, found := node.Attr("href"); found {
-			book.PageURL = pageURL
+			book.PageURL = "/book" + trimHost(pageURL)
 		} else {
 			continue
 		}
@@ -50,10 +52,12 @@ func (p *BooksListPageParser) Parse(r io.ReadCloser) (map[string]any, error) {
 
 		if pictureNode := pictureNodes.First(); pictureNode != nil {
 			if srcset, found := pictureNode.Attr("srcset"); found {
-				book.PictureURL, err = parserlib.GetLargestSrc(srcset)
+				bookPictureURL, err := parserlib.GetLargestSrc(srcset)
 				if err != nil {
 					return nil, err
 				}
+
+				book.PictureURL = "/proxy" + strings.TrimPrefix(bookPictureURL, config.Host)
 			}
 
 			if bookNameAuthor, found := pictureNode.Attr("alt"); found {
@@ -82,4 +86,8 @@ func getBookNameAuthor(line string) (name, author string, err error) {
 	}
 
 	return values[1], values[2], nil
+}
+
+func trimHost(s string) string {
+	return strings.TrimPrefix(s, config.Host)
 }

@@ -1,0 +1,21 @@
+<div class="book-card">
+    <img src="{{.ImageBase}}/{{.CurrentPageNumber}}.jpg" />
+
+    <div class="arrows">
+        {{if .PreviousPageURL}}
+            <a href="{{.PreviousPageURL}}">
+                <div class="arrow-left">&lt;</div>
+            </a>
+        {{else}}
+            <div></div>
+        {{end}}
+
+        {{if .NextPageURL}}
+            <a href="{{.NextPageURL}}">
+                <div class="arrow-right">&gt;</div>
+            </a>
+        {{else}}
+            <div></div>
+        {{end}}
+    </div>
+</div>
