@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"kidstales/internal/client"
-	"kidstales/internal/client/parser"
+	"kidstales/internal/parser"
 	"kidstales/internal/server/middleware"
 	"kidstales/internal/server/render"
 	"log"
