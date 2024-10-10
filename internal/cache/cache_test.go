@@ -20,23 +20,27 @@ func TestCache_Flow(t *testing.T) {
 
 	testData := []byte{0x01, 0x02, 0x03}
 
-	testKey := "test"
-	testFileName := path.Join(cacheDir, "cache_"+testKey)
+	testKey := "01234567890123456789012345678912"
+
+	testDirName := path.Join(cacheDir, testKey[:prefixLength])
+	testFileName := testKey[prefixLength:]
+
+	t.Logf("test dir %s, file name %s", testDirName, testFileName)
 
 	_, found := testCache.Get(testKey)
 	require.False(t, found)
 
 	testCache.Put(testKey, testData)
 
-	t.Logf("test file name %s", testFileName)
-	require.FileExists(t, testFileName)
+	require.DirExists(t, testDirName)
+	require.FileExists(t, path.Join(testDirName, testFileName))
 
 	t.Cleanup(func() {
-		os.Remove(testFileName)
+		require.NoError(t, os.Remove(path.Join(testDirName, testFileName)))
+		require.NoError(t, os.Remove(testDirName))
 	})
 
 	data, found := testCache.Get(testKey)
 	require.True(t, found)
 	require.Equal(t, testData, data)
-
 }
