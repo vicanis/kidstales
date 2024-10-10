@@ -8,5 +8,22 @@
             {{template "item.go.tmpl" .}}
         {{end}}
     </div>
+
+    <div class="book-list-arrows">
+        {{if .PreviousPage}}
+            <a href="/books?page={{.PreviousPage}}">
+                <div class="arrow-left">&lt; Предыдущая страница</div>
+            </a>
+        {{else}}
+            <div class="arrow-left"></div>
+        {{end}}
+        {{if .NextPage}}
+            <a href="/books?page={{.NextPage}}">
+                <div class="arrow-right">Следующая страница &gt;</div>
+            </a>
+        {{else}}
+            <div class="arrow-right"></div>
+        {{end}}
+    </div>
 </body>
 </html>

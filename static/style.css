@@ -45,6 +45,16 @@ a {
     grid-area: author;
 }
 
+.book-list-arrows {
+    display: flex;
+    justify-content: space-between;
+}
+
+.book-list-arrows .arrow-left,
+.book-list-arrows .arrow-right {
+    padding: 0.5em 1em 2em;
+}
+
 .book-card {
     text-align: center;
     height: 100vh;
