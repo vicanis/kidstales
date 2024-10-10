@@ -7,8 +7,6 @@ import (
 	"net/http"
 )
 
-type binaryHandlerFunc func(r *http.Request) ([]byte, error)
-
 func WithCache(handler binaryHandlerFunc) http.Handler {
 	httpCache := cache.NewHttpRequestCache(config.CacheDir)
 
