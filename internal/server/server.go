@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"kidstales/internal/config"
 	"kidstales/internal/server/handlers"
 	"kidstales/internal/server/middleware"
 	"log"
@@ -12,7 +13,6 @@ import (
 )
 
 const (
-	hostPort     = ":80"
 	staticDir    = "/static"
 	readTimeout  = 15 * time.Second
 	writeTimeout = 15 * time.Second
@@ -23,6 +23,17 @@ type Server struct {
 }
 
 func NewServer(ctx context.Context) *Server {
+	configBuilder := new(config.ServerConfigBuilder).
+		WithAddr(config.Env(config.Addr).String()).
+		WithTimeout(readTimeout, writeTimeout)
+
+	if config.Env(config.SSLEnabled).Bool() {
+		configBuilder = configBuilder.WithSSL(
+			config.Env(config.SSLCertPath).String(),
+			config.Env(config.SSLKeyPath).String(),
+		)
+	}
+
 	mx := mux.NewRouter()
 
 	mx.Use(middleware.Logging)
@@ -41,14 +52,7 @@ func NewServer(ctx context.Context) *Server {
 
 	mx.PathPrefix("/proxy").HandlerFunc(handlers.Proxy)
 
-	return &Server{
-		srv: &http.Server{
-			Addr:         hostPort,
-			Handler:      mx,
-			ReadTimeout:  readTimeout,
-			WriteTimeout: writeTimeout,
-		},
-	}
+	return &Server{srv: configBuilder.Build()}
 }
 
 func (s *Server) Start() error {
