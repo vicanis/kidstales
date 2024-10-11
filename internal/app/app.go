@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"kidstales/internal/server"
-	"log"
 )
 
 type App struct {
@@ -17,7 +16,5 @@ func NewApp(ctx context.Context) (*App, error) {
 }
 
 func (a *App) Start(ctx context.Context) error {
-	log.Printf("starting server")
-
 	return a.server.Start()
 }

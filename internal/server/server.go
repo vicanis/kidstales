@@ -4,6 +4,7 @@ import (
 	"context"
 	"kidstales/internal/server/handlers"
 	"kidstales/internal/server/middleware"
+	"log"
 	"net/http"
 	"time"
 
@@ -51,5 +52,6 @@ func NewServer(ctx context.Context) *Server {
 }
 
 func (s *Server) Start() error {
+	log.Printf("starting server at %s", s.srv.Addr)
 	return s.srv.ListenAndServe()
 }
