@@ -42,11 +42,12 @@ func (b *ServerConfigBuilder) WithTimeout(readTimeout, writeTimeout time.Duratio
 	return b
 }
 
-func (b *ServerConfigBuilder) Build() *http.Server {
+func (b *ServerConfigBuilder) Build(handler http.Handler) *http.Server {
 	srv := &http.Server{
 		Addr:         defaultAddr,
 		ReadTimeout:  b.ReadTimeout,
 		WriteTimeout: b.WriteTimeout,
+		Handler:      handler,
 	}
 
 	if b.Addr != "" {

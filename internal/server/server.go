@@ -19,7 +19,9 @@ const (
 )
 
 type Server struct {
-	srv *http.Server
+	srv               *http.Server
+	useTLS            bool
+	certPath, keyPath string
 }
 
 func NewServer(ctx context.Context) *Server {
@@ -27,11 +29,14 @@ func NewServer(ctx context.Context) *Server {
 		WithAddr(config.Env(config.Addr).String()).
 		WithTimeout(readTimeout, writeTimeout)
 
+	useTLS := false
+	certPath := ""
+	keyPath := ""
 	if config.Env(config.SSLEnabled).Bool() {
-		configBuilder = configBuilder.WithSSL(
-			config.Env(config.SSLCertPath).String(),
-			config.Env(config.SSLKeyPath).String(),
-		)
+		useTLS = true
+		certPath = config.Env(config.SSLCertPath).String()
+		keyPath = config.Env(config.SSLKeyPath).String()
+		configBuilder = configBuilder.WithSSL(certPath, keyPath)
 	}
 
 	mx := mux.NewRouter()
@@ -52,10 +57,20 @@ func NewServer(ctx context.Context) *Server {
 
 	mx.PathPrefix("/proxy").HandlerFunc(handlers.Proxy)
 
-	return &Server{srv: configBuilder.Build()}
+	return &Server{
+		srv:      configBuilder.Build(mx),
+		useTLS:   useTLS,
+		certPath: certPath,
+		keyPath:  keyPath,
+	}
 }
 
 func (s *Server) Start() error {
 	log.Printf("starting server at %s", s.srv.Addr)
+
+	if s.useTLS {
+		return s.srv.ListenAndServeTLS(s.certPath, s.keyPath)
+	}
+
 	return s.srv.ListenAndServe()
 }
