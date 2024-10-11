@@ -11,7 +11,7 @@ COPY internal internal/
 WORKDIR /app/cmd
 RUN go build -o /app/app app.go
 
-FROM alpine:latest AS runner
+FROM alpine:3.12 AS runner
 
 RUN apk update && apk add ca-certificates libc6-compat
 
