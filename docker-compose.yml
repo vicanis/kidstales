@@ -7,3 +7,4 @@ services:
       - ./static:/static
       - ./cache:/cache
       - ./.env:/.env
+      - /etc/letsencrypt/live:/cert
