@@ -3,8 +3,9 @@ services:
     build: .
     ports:
       - 8000:80
+    env_file:
+      - .env
     volumes:
       - ./static:/static
       - ./cache:/cache
-      - ./.env:/.env
-      - /etc/letsencrypt/live:/cert
+      - /etc/letsencrypt:/cert
