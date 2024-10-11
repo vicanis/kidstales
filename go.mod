@@ -7,6 +7,7 @@ require github.com/stretchr/testify v1.9.0
 require (
 	github.com/antchfx/xpath v1.3.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	golang.org/x/text v0.18.0 // indirect
 )
 

@@ -6,3 +6,4 @@ services:
     volumes:
       - ./static:/static
       - ./cache:/cache
+      - ./.env:/.env
