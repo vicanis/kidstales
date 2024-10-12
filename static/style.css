@@ -74,9 +74,8 @@ a {
 
 .book-card .arrow {
     position: absolute;
-    top: 0;
-    height: 100vh;
-    font-size: 300%;
+    top: 50vh;
+    height: 0px;
     opacity: 0.3;
     z-index: 1;
     cursor: pointer;
