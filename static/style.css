@@ -72,31 +72,30 @@ a {
     max-width: 100%;
 }
 
-.book-card .arrows {
+.book-card .arrow {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100vw;
     height: 100vh;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1
-}
-
-.book-card .arrows .arrow-left,
-.book-card .arrows .arrow-right {
     font-size: 300%;
-    padding: 1em 0.5em;
     opacity: 0.3;
+    z-index: 1;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
-.book-card .arrows .arrow-left {
-    padding-left: 0.1em;
+.book-card .arrow.disabled {
+    opacity: 0.1;
 }
-.book-card .arrows .arrow-right {
-    padding-right: 0.1em;
+
+.book-card .arrow.left {
+    left: 0;
+    padding: 0 0.5em 0 0.1em;
+}
+
+.book-card .arrow.right {
+    right: 0;
+    padding: 0 0.1em 0 0.5em;
 }
 
 a.goto-menu {

@@ -1,27 +1,12 @@
 <div class="book-card">
     <div class="book-image">
-        <img src="{{.ImageBase}}/{{.CurrentPageNumber}}.jpg" />
+        <img class="loading" data-base="{{.ImageBase}}" data-page="{{.CurrentPageNumber}}" data-count="{{.PageCount}}" />
     </div>
 
     <a href="/books" class="goto-menu">
         <img src="/static/menu.png" />
     </a>
 
-    <div class="arrows">
-        {{if .PreviousPageURL}}
-            <a href="{{.PreviousPageURL}}">
-                <div class="arrow-left">&lt;</div>
-            </a>
-        {{else}}
-            <div></div>
-        {{end}}
-
-        {{if .NextPageURL}}
-            <a href="{{.NextPageURL}}">
-                <div class="arrow-right">&gt;</div>
-            </a>
-        {{else}}
-            <div></div>
-        {{end}}
-    </div>
+    <div class="arrow left disabled">&lt;</div>
+    <div class="arrow right">&gt;</div>
 </div>
