@@ -1,12 +1,12 @@
 function init() {
     const image = $('.book-card .book-image');
 
+    const leftArrow = $('.book-card .arrow.left');
+    const rightArrow = $('.book-card .arrow.right');
+
     const { base, count } = image.data();
 
     setImages(0, undefined);
-
-    const leftArrow = $('.book-card .arrow.left');
-    const rightArrow = $('.book-card .arrow.right');
 
     $('.book-card .booklet-mode').click(function() {
         image.toggleClass('booklet');
@@ -84,12 +84,50 @@ function init() {
     }
 
     function setImages(pageLeft, pageRight) {
-        image.find('img.left').attr({ src: `${base}/${pageLeft+1}.jpg` });
+        setImageSrc(image.find('img.left'), `${base}/${pageLeft+1}.jpg`);
 
         if (pageRight) {
-            image.find('img.right').show().attr({ src: `${base}/${pageRight+1}.jpg` });
+            image.find('img.right').show();
+            setImageSrc(image.find('img.right'), `${base}/${pageRight+1}.jpg`);
         } else {
             image.find('img.right').hide();
         }
     }
+
+    function setImageSrc(image, src) {
+        setLoading(true);
+        image.attr({ src });
+    }
+
+    function setLoading(loading) {
+        if (loading) {
+            $('.book-card').addClass('loading');
+            leftArrow.addClass('disabled');
+            rightArrow.addClass('disabled');
+        } else {
+            $('.book-card').removeClass('loading');
+            leftArrow.removeClass('disabled');
+            rightArrow.removeClass('disabled');
+        }
+    }
+
+    function setLoadingError(image) {
+        setImageSrc(image, '/static/error.png');
+        setLoading(false);
+    }
+
+    image.find('img').
+        on('load', function() {
+            if (this.naturalHeight + this.naturalWidth == 0) {
+                setLoadingError($(this));
+                return;
+            }
+
+            if (!image.hasClass('booklet') || $(this).hasClass('right')) {
+                setLoading(false);
+            }
+        }).
+        on('error', function() {
+            setLoadingError($(this));
+        });
 }

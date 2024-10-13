@@ -126,3 +126,17 @@ a.goto-menu {
 .book-card .booklet-mode.enabled {
     opacity: 1;
 }
+
+.book-card img.loader {
+    position: absolute;
+    top: calc(50vh - 25px);
+    left: calc(50vw - 25px);
+    display: none;
+}
+
+.book-card.loading img.loader {
+    display: block;
+}
+.book-card.loading .book-image {
+    visibility: hidden;
+}
