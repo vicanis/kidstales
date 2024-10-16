@@ -6,3 +6,8 @@ type Book struct {
 	PageURL    string
 	PictureURL string
 }
+
+type BookList struct {
+	Books   []Book
+	HasNext bool
+}

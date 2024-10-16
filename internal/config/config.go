@@ -7,3 +7,5 @@ const Host = "https://skazkiwsem.fun"
 const ClientTimeout = 30 * time.Second
 
 const CacheDir = "/cache"
+
+const DatabasePath = "/db/books.sqlite"
