@@ -16,9 +16,9 @@ func TestListPage(t *testing.T) {
 	values, err := new(BooksListPageParser).Parse(f)
 	require.NoError(t, err)
 
-	books := values["Books"].([]*model.Book)
+	books := values["Books"].([]model.Book)
 
-	require.Equal(t, []*model.Book{
+	require.Equal(t, []model.Book{
 		{
 			Name:       "Русалочка",
 			Author:     "Disney",

@@ -15,7 +15,7 @@ func NewNode(htmlNode *html.Node) *Node {
 	return &Node{node: htmlNode}
 }
 
-func (n *Node) Query(selector string, filters ...filterFunc) (*NodeList, error) {
+func (n *Node) Query(selector string, filters ...func(node *Node) (*Node, bool)) (*NodeList, error) {
 	htmlNodes, err := htmlquery.QueryAll(n.node, selector)
 	if err != nil {
 		return nil, fmt.Errorf("selector failed: %w", err)
@@ -28,6 +28,15 @@ func (n *Node) Query(selector string, filters ...filterFunc) (*NodeList, error) 
 	}
 
 	return nodes, nil
+}
+
+func (n *Node) QueryOne(selector string, filters ...func(node *Node) (*Node, bool)) (*Node, error) {
+	list, err := n.Query(selector, filters...)
+	if err != nil {
+		return nil, err
+	}
+
+	return list.First(), nil
 }
 
 func (n *Node) Attrs() map[string]string {
@@ -45,6 +54,17 @@ func (n *Node) Attr(key string) (value string, found bool) {
 		if attr.Key == key {
 			value = attr.Val
 			found = true
+			break
+		}
+	}
+
+	return
+}
+
+func (n *Node) MaybeAttr(key string) (value string) {
+	for _, attr := range n.node.Attr {
+		if attr.Key == key {
+			value = attr.Val
 			break
 		}
 	}

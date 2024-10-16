@@ -23,8 +23,7 @@ func (p *BooksListPageParser) Parse(r io.ReadCloser) (map[string]any, error) {
 	linkNodes, err := root.Query(
 		"//figure[@class]",
 		func(node *parserlib.Node) (*parserlib.Node, bool) {
-			value, found := node.Attr("class")
-			return node, found && value == "post-thumbnail"
+			return node, node.MaybeAttr("class") == "post-thumbnail"
 		},
 		func(node *parserlib.Node) (*parserlib.Node, bool) {
 			return node.FirstChild(), true
@@ -33,6 +32,18 @@ func (p *BooksListPageParser) Parse(r io.ReadCloser) (map[string]any, error) {
 	if err != nil {
 		return nil, fmt.Errorf("link node query failed: %w", err)
 	}
+
+	nextPageNode, err := root.QueryOne(
+		"//a@class",
+		func(node *parserlib.Node) (*parserlib.Node, bool) {
+			return node, node.MaybeAttr("class") == "next page-numbers"
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("next page node query failed: %w", err)
+	}
+
+	hasNextPage := nextPageNode != nil && len(nextPageNode.MaybeAttr("href")) > 0
 
 	books := make([]*model.Book, 0, len(linkNodes.Nodes()))
 
@@ -45,26 +56,24 @@ func (p *BooksListPageParser) Parse(r io.ReadCloser) (map[string]any, error) {
 			continue
 		}
 
-		pictureNodes, err := node.Query("img")
+		pictureNode, err := node.QueryOne("img")
 		if err != nil {
 			return nil, fmt.Errorf("book picture query failed: %w", err)
 		}
 
-		if pictureNode := pictureNodes.First(); pictureNode != nil {
-			if srcset, found := pictureNode.Attr("srcset"); found {
-				bookPictureURL, err := parserlib.GetLargestSrc(srcset)
-				if err != nil {
-					return nil, err
-				}
-
-				book.PictureURL = "/proxy" + strings.TrimPrefix(bookPictureURL, config.Host)
+		if srcset, found := pictureNode.Attr("srcset"); found {
+			bookPictureURL, err := parserlib.GetLargestSrc(srcset)
+			if err != nil {
+				return nil, err
 			}
 
-			if bookNameAuthor, found := pictureNode.Attr("alt"); found {
-				book.Name, book.Author, err = getBookNameAuthor(bookNameAuthor)
-				if err != nil {
-					return nil, fmt.Errorf("book name & author (%s) parse failed: %w", bookNameAuthor, err)
-				}
+			book.PictureURL = "/proxy" + strings.TrimPrefix(bookPictureURL, config.Host)
+		}
+
+		if bookNameAuthor, found := pictureNode.Attr("alt"); found {
+			book.Name, book.Author, err = getBookNameAuthor(bookNameAuthor)
+			if err != nil {
+				return nil, fmt.Errorf("book name & author (%s) parse failed: %w", bookNameAuthor, err)
 			}
 		}
 
@@ -72,7 +81,8 @@ func (p *BooksListPageParser) Parse(r io.ReadCloser) (map[string]any, error) {
 	}
 
 	return map[string]any{
-		"Books": books,
+		"Books":       books,
+		"HasNextPage": hasNextPage,
 	}, nil
 }
 

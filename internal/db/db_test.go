@@ -30,15 +30,19 @@ func TestCreateAndGetOne(t *testing.T) {
 
 	const bookName = "test-book-name-1"
 
-	testBook := model.Book{
+	testBook := &model.Book{
 		Name:   bookName,
 		Author: "test-book-author-1",
 	}
 
-	err := db.Add(testBook)
+	actualBook, err := db.GetBook(bookName)
+	require.Error(t, err)
+	require.ErrorIs(t, err, model.ErrNotFound)
+
+	err = db.Add(testBook)
 	require.NoError(t, err)
 
-	actualBook, err := db.GetBook(bookName)
+	actualBook, err = db.GetBook(bookName)
 	require.NoError(t, err)
 	require.Equal(t, &testBook, actualBook)
 }
@@ -49,7 +53,7 @@ func TestCreateAndGetListBooks(t *testing.T) {
 	const limit = 10
 
 	for i := 0; i < limit*2; i++ {
-		testBook := model.Book{
+		testBook := &model.Book{
 			Name:   fmt.Sprintf("test-name-%d", i),
 			Author: fmt.Sprintf("author-%d", i/2),
 		}

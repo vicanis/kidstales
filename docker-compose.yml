@@ -11,3 +11,4 @@ services:
       - ./static:/static
       - ./cache:/cache
       - /etc/letsencrypt:/cert
+      - ./db:/db

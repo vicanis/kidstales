@@ -1,4 +1,4 @@
-FROM golang:latest AS builder
+FROM golang:1.21 AS builder
 
 WORKDIR /app
 
@@ -11,9 +11,9 @@ COPY internal internal/
 WORKDIR /app/cmd
 RUN go build -o /app/app app.go
 
-FROM alpine:3.12 AS runner
+FROM ubuntu:latest AS runner
 
-RUN apk update && apk add ca-certificates libc6-compat
+RUN apt-get update && apt-get install -y ca-certificates
 
 COPY templates /templates
 COPY --from=builder /app/app /app

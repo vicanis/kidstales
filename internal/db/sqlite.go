@@ -31,13 +31,13 @@ func NewSqliteDB(path string) *SqliteDB {
 		log.Fatalf("NewSqliteDB: database connect failed: %v", err)
 	}
 
-	db.AutoMigrate(&model.Book{})
+	db.AutoMigrate(&Book{})
 
 	return &SqliteDB{db: db}
 }
 
 func (d *SqliteDB) GetBookList(page, limit int) (*model.BookList, error) {
-	list := make([]model.Book, 0)
+	list := make([]*Book, 0)
 
 	result := d.db.Offset(page * limit).Limit(limit + 1).Find(&list)
 	if result.Error != nil {
@@ -46,30 +46,34 @@ func (d *SqliteDB) GetBookList(page, limit int) (*model.BookList, error) {
 
 	if len(list) < limit {
 		return &model.BookList{
-			Books:   list,
+			Books:   toAppModelBooks(list),
 			HasNext: false,
 		}, nil
 	}
 
 	return &model.BookList{
-		Books:   list[:limit],
+		Books:   toAppModelBooks(list[:limit]),
 		HasNext: len(list) > limit,
 	}, nil
 }
 
 func (d *SqliteDB) GetBook(name string) (*model.Book, error) {
-	book := &model.Book{}
+	var book *Book
 
 	result := d.db.Find(&book, map[string]any{"name": name})
 	if result.Error != nil {
 		return nil, pkgerr.Wrap(result.Error, "get book failed")
 	}
 
-	return book, nil
+	if result.RowsAffected == 0 {
+		return nil, model.ErrNotFound
+	}
+
+	return toAppModel(book), nil
 }
 
-func (d *SqliteDB) Add(book model.Book) error {
-	result := d.db.Create(book)
+func (d *SqliteDB) Add(book *model.Book) error {
+	result := d.db.Create(toDBModel(book))
 	if result.Error != nil {
 		return pkgerr.Wrap(result.Error, "book insert failed")
 	}

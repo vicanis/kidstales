@@ -8,6 +8,6 @@ type Book struct {
 }
 
 type BookList struct {
-	Books   []Book
+	Books   []*Book
 	HasNext bool
 }
