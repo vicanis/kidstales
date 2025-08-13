@@ -2,13 +2,12 @@ package middleware
 
 import (
 	"kidstales/internal/cache"
-	"kidstales/internal/config"
 	"kidstales/internal/server/render"
 	"net/http"
 )
 
 func WithCache(handler binaryHandlerFunc) http.Handler {
-	httpCache := cache.NewHttpRequestCache(config.CacheDir)
+	httpCache := cache.NewHttpRequestCache()
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if data, found := httpCache.Get(r); found {

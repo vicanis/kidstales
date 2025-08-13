@@ -22,7 +22,12 @@ func (p *BookPageParser) Parse(r io.ReadCloser) (map[string]any, error) {
 		return nil, fmt.Errorf("iframe error: %w", err)
 	}
 
-	iframeSrc, found := iframe.First().Attr("src")
+	firstIframe := iframe.First()
+	if firstIframe == nil {
+		return nil, fmt.Errorf("no iframe found")
+	}
+
+	iframeSrc, found := firstIframe.Attr("src")
 	if !found {
 		return nil, fmt.Errorf("iframe src not found")
 	}

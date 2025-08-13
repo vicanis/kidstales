@@ -21,7 +21,7 @@ func New() *Client {
 		httpClient: &http.Client{
 			Timeout: config.ClientTimeout,
 		},
-		cache: cache.NewHttpRequestCache(config.CacheDir),
+		cache: cache.NewHttpRequestCache(),
 	}
 }
 
