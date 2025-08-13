@@ -12,3 +12,8 @@ services:
       - ./cache:/cache
       - /etc/letsencrypt:/cert
       - ./db:/db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "3"
