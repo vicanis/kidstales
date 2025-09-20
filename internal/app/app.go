@@ -4,6 +4,7 @@ import (
 	"context"
 	"kidstales/internal/cache/sqlite"
 	"kidstales/internal/server"
+	"log"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -19,15 +20,17 @@ func NewApp(ctx context.Context) (*App, error) {
 }
 
 func (a *App) Start(ctx context.Context) error {
-	eg, ctx := errgroup.WithContext(ctx)
+	eg, egCtx := errgroup.WithContext(ctx)
 
 	eg.Go(func() error {
-		return a.server.Start(ctx)
+		err := sqlite.StartCleaner(egCtx)
+		log.Printf("cleaner failed: %v", err)
+		return nil
 	})
 
-	eg.Go(func() error {
-		return sqlite.StartCleaner(ctx)
-	})
+	// eg.Go(func() error {
+	// 	return a.server.Start(egCtx)
+	// })
 
 	return eg.Wait()
 }

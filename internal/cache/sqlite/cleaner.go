@@ -8,19 +8,28 @@ import (
 
 const cleanerInterval = time.Minute
 
-func StartCleaner(ctx context.Context) error {
-	ticker := time.NewTicker(cleanerInterval)
+func StartCleaner(ctx context.Context) (err error) {
+	log.Printf("cleaner: start")
 
+	ticker := time.NewTicker(cleanerInterval)
+	defer ticker.Stop()
+
+loop:
 	for {
 		select {
 		case <-ctx.Done():
-			return nil
+			err = ctx.Err()
+			break loop
 
 		case <-ticker.C:
-			err := NewDBCache().Clean()
+			err = NewDBCache().Clean()
 			if err != nil {
-				log.Printf("cleaner failed: %v", err)
+				break loop
 			}
 		}
 	}
+
+	log.Printf("cleaner: end: %v", err)
+
+	return
 }
