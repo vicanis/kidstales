@@ -19,6 +19,6 @@ func main() {
 
 	err = app.Start(ctx)
 	if err != nil {
-		log.Printf("app error: %v", err)
+		log.Printf("app: %v", err)
 	}
 }

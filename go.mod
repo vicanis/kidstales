@@ -1,6 +1,6 @@
 module kidstales
 
-go 1.21
+go 1.24.0
 
 require (
 	github.com/pkg/errors v0.9.1
@@ -15,6 +15,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/mattn/go-sqlite3 v1.14.24 // indirect
+	golang.org/x/sync v0.17.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
 )
 

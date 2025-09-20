@@ -65,8 +65,14 @@ func NewServer(ctx context.Context) *Server {
 	}
 }
 
-func (s *Server) Start() error {
+func (s *Server) Start(ctx context.Context) error {
 	log.Printf("starting server at %s", s.srv.Addr)
+
+	go func() {
+		<-ctx.Done()
+		log.Printf("shutdown server")
+		_ = s.srv.Close()
+	}()
 
 	if s.useTLS {
 		return s.srv.ListenAndServeTLS(s.certPath, s.keyPath)

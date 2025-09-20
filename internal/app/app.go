@@ -2,7 +2,10 @@ package app
 
 import (
 	"context"
+	"kidstales/internal/cache/sqlite"
 	"kidstales/internal/server"
+
+	"golang.org/x/sync/errgroup"
 )
 
 type App struct {
@@ -16,5 +19,15 @@ func NewApp(ctx context.Context) (*App, error) {
 }
 
 func (a *App) Start(ctx context.Context) error {
-	return a.server.Start()
+	eg, ctx := errgroup.WithContext(ctx)
+
+	eg.Go(func() error {
+		return a.server.Start(ctx)
+	})
+
+	eg.Go(func() error {
+		return sqlite.StartCleaner(ctx)
+	})
+
+	return eg.Wait()
 }
