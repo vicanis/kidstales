@@ -36,8 +36,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /apps/kidstales
-            docker compose down
+            git pull
             docker compose build
+            docker compose down
             docker compose up -d
             docker image prune -af
             docker builder prune -af

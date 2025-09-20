@@ -23,14 +23,14 @@ func (a *App) Start(ctx context.Context) error {
 	eg, egCtx := errgroup.WithContext(ctx)
 
 	eg.Go(func() error {
+		return a.server.Start(egCtx)
+	})
+
+	eg.Go(func() error {
 		err := sqlite.StartCleaner(egCtx)
 		log.Printf("cleaner failed: %v", err)
 		return nil
 	})
-
-	// eg.Go(func() error {
-	// 	return a.server.Start(egCtx)
-	// })
 
 	return eg.Wait()
 }
