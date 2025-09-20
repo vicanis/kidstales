@@ -68,7 +68,7 @@ func (d *dbCache) Set(key string, data []byte) error {
 func (d *dbCache) Clean() error {
 	log.Printf("Clean(): started")
 
-	res, err := d.db.Exec(`DELETE FROM cache WHERE created_at < ? LIMIT 1000`, time.Now().Add(-ttl))
+	res, err := d.db.Exec(`DELETE FROM cache WHERE created_at < ? LIMIT ?`, time.Now().Add(-ttl), 1000)
 	if err != nil {
 		return fmt.Errorf("clean failed: %w", err)
 	}
