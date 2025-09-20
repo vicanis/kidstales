@@ -68,14 +68,21 @@ func (d *dbCache) Set(key string, data []byte) error {
 func (d *dbCache) Clean() error {
 	log.Printf("Clean(): started")
 
-	res, err := d.db.Exec(`DELETE FROM cache WHERE created_at < ?`, time.Now().Add(-ttl))
+	res, err := d.db.Exec(`DELETE FROM cache WHERE created_at < ? LIMIT 1000`, time.Now().Add(-ttl))
 	if err != nil {
 		return fmt.Errorf("clean failed: %w", err)
 	}
 
 	count, _ := res.RowsAffected()
 
-	fmt.Printf("Clean(): %d rows deleted", count)
+	fmt.Printf("Clean(): %d rows deleted, starting vacuum", count)
+
+	_, err = d.db.Exec("VACUUM")
+	if err != nil {
+		return fmt.Errorf("vacuum failed: %w", err)
+	}
+
+	fmt.Printf("Clean(): vacuum completed")
 
 	return nil
 }
